@@ -1,0 +1,34 @@
+{
+  "name": "cordova-plugin-wkuserscript",
+  "version": "1.0.0",
+  "description": "Cordova WKUserScript Plugin",
+  "types": "./types/index.d.ts",
+  "cordova": {
+    "id": "cordova-plugin-wkuserscript",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moodlemobile/cordova-plugin-wkuserscript"
+  },
+  "bugs": {
+    "url": "https://github.com/moodlemobile/cordova-plugin-wkuserscript/issues"
+  },
+  "keywords": [
+    "cordova",
+    "wkuserscript",
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "engines": {
+    "cordovaDependencies": {
+      "3.0.0": {
+        "cordova": ">100"
+      }
+    }
+  },
+  "author": "Moodle Pty Ltd",
+  "license": "Apache-2.0"
+}
