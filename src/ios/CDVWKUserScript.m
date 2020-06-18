@@ -35,6 +35,7 @@
 {
     NSString *scriptId = [command.arguments objectAtIndex:0];
     NSString *path = [command.arguments objectAtIndex:1];
+    int injectionTime = [[command.arguments objectAtIndex:2] intValue];
 
     if ([self scriptNotLoaded:scriptId]) {
         NSError *error = nil;
@@ -43,7 +44,7 @@
         if (source == nil || error != nil) {
             NSLog(@"CDVWKUserScript: Error reading script file: %@", error);
         } else {
-            [self addScript:source];
+            [self addScript:source injectionTime:[self parseInjectionTime:injectionTime]];
         }
     }
 
@@ -53,8 +54,10 @@
 - (void) addScriptCode:(CDVInvokedUrlCommand*)command
 {
     NSString *scriptId = [command.arguments objectAtIndex:0];
+    int injectionTime = [[command.arguments objectAtIndex:2] intValue];
+
     if ([self scriptNotLoaded:scriptId]) {
-        [self addScript:[command.arguments objectAtIndex:0]];
+        [self addScript:[command.arguments objectAtIndex:1] injectionTime:[self parseInjectionTime:injectionTime]];
     }
 
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] callbackId:command.callbackId];
@@ -77,12 +80,21 @@
     }
 }
 
-- (void)addScript:(NSString*)source
+- (WKUserScriptInjectionTime) parseInjectionTime:(int)injectionTime
+{
+    if (injectionTime == 1) {
+        return WKUserScriptInjectionTimeAtDocumentEnd;
+    } else {
+        return WKUserScriptInjectionTimeAtDocumentStart;
+    }
+}
+
+- (void) addScript:(NSString*)source injectionTime:(WKUserScriptInjectionTime)injectionTime
 {
     WKWebView* wkWebView = (WKWebView*)self.webView;
 
     WKUserScript *script = [[WKUserScript alloc] initWithSource:source
-                                injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                injectionTime:injectionTime
                                 forMainFrameOnly:NO];
 
     WKUserContentController* userContentController = wkWebView.configuration.userContentController;

@@ -29,6 +29,19 @@ export interface WKUserScriptData {
      * The path of a JS file to add to the script.
      */
     file?: string;
+
+    /**
+     * Injection time. Defaults to WKUserScriptInjectionTime.START.
+     */
+    injectionTime?: number;
+}
+
+/**
+ * Constants to define injection time.
+ */
+export const enum WKUserScriptInjectionTime {
+    START = 0,
+    END = 1,
 }
 
 /**
