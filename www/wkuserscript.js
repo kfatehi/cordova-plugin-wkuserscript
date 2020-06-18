@@ -28,11 +28,11 @@ var WKUserScript = {
     addScript: function (data) {
         return new Promise(function(resolve, reject) {
             if (typeof data.code == 'string') {
-                exec(resolve, reject, 'WKUserScript', 'addScriptCode', [data.code]);
+                exec(resolve, reject, 'WKUserScript', 'addScriptCode', [data.id, data.code]);
             } else if (typeof data.file == 'string') {
                 var path = data.file.replace(/^file:\/\//, ''); // Remove "file://" from the path, the plugin doesn't need it.
 
-                exec(resolve, reject, 'WKUserScript', 'addScriptFile', [path]);
+                exec(resolve, reject, 'WKUserScript', 'addScriptFile', [data.id, path]);
             } else {
                 reject('addScript requires exactly one of code or file to be specified');
             }

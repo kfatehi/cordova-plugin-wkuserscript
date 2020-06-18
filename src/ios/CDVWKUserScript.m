@@ -33,15 +33,18 @@
 
 - (void) addScriptFile:(CDVInvokedUrlCommand*)command
 {
-    NSString *path = [command.arguments objectAtIndex:0];
+    NSString *scriptId = [command.arguments objectAtIndex:0];
+    NSString *path = [command.arguments objectAtIndex:1];
 
-    NSError *error = nil;
-    NSString *source = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+    if ([self scriptNotLoaded:scriptId]) {
+        NSError *error = nil;
+        NSString *source = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
 
-    if (source == nil || error != nil) {
-        NSLog(@"CDVWKUserScript: Error reading script file: %@", error);
-    } else {
-        [self addScript:source];
+        if (source == nil || error != nil) {
+            NSLog(@"CDVWKUserScript: Error reading script file: %@", error);
+        } else {
+            [self addScript:source];
+        }
     }
 
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] callbackId:command.callbackId];
@@ -49,9 +52,29 @@
 
 - (void) addScriptCode:(CDVInvokedUrlCommand*)command
 {
-    [self addScript:[command.arguments objectAtIndex:0]];
+    NSString *scriptId = [command.arguments objectAtIndex:0];
+    if ([self scriptNotLoaded:scriptId]) {
+        [self addScript:[command.arguments objectAtIndex:0]];
+    }
 
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] callbackId:command.callbackId];
+}
+
+- (bool) scriptNotLoaded:(NSString*)scriptId
+{
+    if (self.idsLoaded == nil) {
+        self.idsLoaded = [[NSMutableDictionary alloc] init];
+    }
+
+    if (self.idsLoaded[scriptId]) {
+        NSLog(@"CDVWKUserScript: Script already loaded, ignore: %@", scriptId);
+
+        return false;
+    } else {
+        self.idsLoaded[scriptId] = scriptId;
+
+        return true;
+    }
 }
 
 - (void)addScript:(NSString*)source

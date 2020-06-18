@@ -11,6 +11,27 @@ export interface WKUserScriptWindow extends Window {
 }
 
 /**
+ * Data to pass for a script.
+ */
+export interface WKUserScriptData {
+
+    /**
+     * An ID to identify the script, to prevent loading the same script twice.
+     */
+    id: string;
+
+    /**
+     * The JS code of the script.
+     */
+    code?: string;
+
+    /**
+     * The path of a JS file to add to the script.
+     */
+    file?: string;
+}
+
+/**
  * Provides some functions to add user scripts in WKWebView in iOS.
  */
 interface WKUserScript {
@@ -21,7 +42,7 @@ interface WKUserScript {
      * @param data Data for the script to add.
      * @return Promise resolved when done.
      */
-    addScript(data: {code?: string, file?: string}): Promise<void>;
+    addScript(data: WKUserScriptData): Promise<void>;
 }
 
 export declare var WKUserScript: WKUserScript;
