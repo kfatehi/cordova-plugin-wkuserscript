@@ -25,6 +25,11 @@ var exec = require('cordova/exec');
 
 var WKUserScript = {
 
+    InjectionTime: {
+        START: 0,
+        END: 1,
+    },
+
     addScript: function (data) {
         return new Promise(function(resolve, reject) {
             if (typeof data.code == 'string') {
