@@ -37,17 +37,17 @@ export interface WKUserScriptData {
 }
 
 /**
- * Constants to define injection time.
- */
-export const enum WKUserScriptInjectionTime {
-    START = 0,
-    END = 1,
-}
-
-/**
  * Provides some functions to add user scripts in WKWebView in iOS.
  */
 interface WKUserScript {
+
+    /**
+     * Injection times.
+     */
+    InjectionTime: {
+        START: 0;
+        END: 1;
+    };
 
     /**
      * Add a user script.
