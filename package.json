@@ -9,13 +9,9 @@
       "ios"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/moodlemobile/cordova-plugin-wkuserscript"
-  },
-  "bugs": {
-    "url": "https://github.com/moodlemobile/cordova-plugin-wkuserscript/issues"
-  },
+  "repository": "github:moodlemobile/cordova-plugin-wkuserscript#main",
+  "homepage": "https://github.com/moodlemobile/cordova-plugin-wkuserscript/tree/main#readme",
+  "bugs": "https://github.com/moodlemobile/cordova-plugin-wkuserscript/issues",
   "keywords": [
     "cordova",
     "wkuserscript",
