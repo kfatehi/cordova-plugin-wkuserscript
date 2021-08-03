@@ -27,13 +27,13 @@ Plugin to add WKUserScripts in WKWebView (iOS). This can be used to inject JS co
 
 Please notice that this plugin requires you to use WKWebView.
 
-
 ## Installation
 
-This plugin isn't published in npm yet, so it must be installed via repo url:
+You can install the plugin using the following command:
 
-    cordova plugin add  https://github.com/moodlemobile/cordova-plugin-wkuserscript
-
+```sh
+cordova plugin add cordova-plugin-wkuserscript
+```
 
 ## Methods
 
@@ -41,28 +41,29 @@ This plugin defines global `WKUserScript` object.
 
 Although in the global scope, it is not available until after the `deviceready` event.
 
-    document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady() {
-        console.log(WKUserScript);
-    }
+```js
+function onDeviceReady() {
+    console.log(WKUserScript);
+}
 
-- WKUserScript.addScript
-
-## WKUserScript.addScript
+document.addEventListener("deviceready", onDeviceReady, false);
+```
+### WKUserScript.addScript
 
 Adds a user script that will be injected to all iframes of the app (and also to the WebView, be careful with that). You can either pass the JS code to inject or the path of a JS script to inject.
 
-
-### Supported Platforms
+## Supported Platforms
 
 - iOS 11+
 
-### Quick Example
+## Quick Example
 
-    WKUserScript.addScript({
-        code: 'window.myGlobalVar = "Test";',
-    }).then(function() {
-        // Success.
-    }).catch(function() {
-        // Error.
-    });
+```js
+WKUserScript.addScript({
+    code: 'window.myGlobalVar = "Test";',
+}).then(function() {
+    // Success.
+}).catch(function() {
+    // Error.
+});
+```
