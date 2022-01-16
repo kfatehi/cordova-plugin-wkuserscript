@@ -26,7 +26,7 @@
 #import "CDVWKUserScript.h"
 #import <WebKit/WebKit.h>
 
-@interface CDVWKUserScript () {}
+@interface CDVWKUserScript () <WKScriptMessageHandlerWithReply>
 @end
 
 @implementation CDVWKUserScript
@@ -54,7 +54,8 @@
 - (void) addScriptCode:(CDVInvokedUrlCommand*)command
 {
     NSString *scriptId = [command.arguments objectAtIndex:0];
-    int injectionTime = [[command.arguments objectAtIndex:2] intValue];
+    int injectionTime = [[command.arguments objectAtIndex:3] intValue];
+    self.endpoint = [command.arguments objectAtIndex:2];
 
     if ([self scriptNotLoaded:scriptId]) {
         [self addScript:[command.arguments objectAtIndex:1] injectionTime:[self parseInjectionTime:injectionTime]];
@@ -98,7 +99,28 @@
                                 forMainFrameOnly:NO];
 
     WKUserContentController* userContentController = wkWebView.configuration.userContentController;
+    [userContentController addScriptMessageHandlerWithReply:self contentWorld: [WKContentWorld pageWorld] name:@"native"];
     [userContentController addUserScript:script];
+}
+
+- (void)userContentController:(WKUserContentController*)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message replyHandler:(nonnull void (^)(id _Nullable, NSString * _Nullable))replyHandler {
+    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:self.endpoint]];
+    [urlRequest setHTTPMethod:@"POST"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlRequest setHTTPBody:[[message body] dataUsingEncoding:NSUTF8StringEncoding]];
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        NSString* responseBody = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if(httpResponse.statusCode == 200)
+        {
+            replyHandler(responseBody, NULL);
+        } else {
+            replyHandler(NULL, responseBody);
+        }
+    }];
+    [dataTask resume];
 }
 
 @end

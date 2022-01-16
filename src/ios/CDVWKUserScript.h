@@ -23,6 +23,7 @@
 @interface CDVWKUserScript : CDVPlugin {}
 
 @property (nonatomic, strong, readwrite) NSMutableDictionary *idsLoaded;
+@property (nonatomic, strong, readwrite) NSString *endpoint;
 
 - (void) addScriptFile:(CDVInvokedUrlCommand*)command;
 - (void) addScriptCode:(CDVInvokedUrlCommand*)command;

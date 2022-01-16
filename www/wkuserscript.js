@@ -33,7 +33,7 @@ var WKUserScript = {
     addScript: function (data) {
         return new Promise(function(resolve, reject) {
             if (typeof data.code == 'string') {
-                exec(resolve, reject, 'WKUserScript', 'addScriptCode', [data.id, data.code, data.injectionTime || 0]);
+                exec(resolve, reject, 'WKUserScript', 'addScriptCode', [data.id, data.code, data.endpoint, data.injectionTime || 0]);
             } else if (typeof data.file == 'string') {
                 var path = data.file.replace(/^file:\/\//, ''); // Remove "file://" from the path, the plugin doesn't need it.
 
@@ -42,8 +42,7 @@ var WKUserScript = {
                 reject('addScript requires exactly one of code or file to be specified');
             }
         });
-    },
-
+    }
 };
 
 module.exports = WKUserScript;
